@@ -1,0 +1,37 @@
+Before Optimization
+
+=============================
+
+class PrintObject:
+    def __str__(self):
+        attrs = vars(self)
+        tempList = list()
+        for sport in attrs.items():
+            tempList.append(sport[0].replace('_' + self.__class__.__name__, '').lstrip('_') + ": " + str(sport[1]))
+        sportResult = tempList
+        return ', '.join(sportResult)
+
+
+
+After Optimization
+
+=============================
+
+class PrintObject:
+    def __str__(self):
+        return ', '.join(sport[0].replace('_' + self.__class__.__name__, '').lstrip('_') + ": " + str(sport[1]) for sport in vars(self).items())
+
+
+
+After Optimization with map() implementation instead of for loop for faster execution
+
+=============================
+
+class PrintObject:
+	def cleanVariableName(variableName, obj):return (variableName[0].replace('_'+obj.__class__.__name__,'').lstrip('_')+': '+str(variableName[1]))
+	def __str__(self):return ', '.join(map(PrintObject.cleanVariableName,vars(self).items(),self))
+
+class InheritingClass(PrintObject):
+	def __init__(self):pass
+	def __iter__(self):return self
+	def __next__(self):return self
